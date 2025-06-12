@@ -3,15 +3,71 @@
 <head>
   <meta charset="UTF-8">
   <title>Simple Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #89f7fe, #66a6ff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .calculator {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 300px;
+    }
+    .calculator h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    input[type="number"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    h2 {
+      margin-top: 20px;
+      color: #444;
+    }
+    #result {
+      font-weight: bold;
+      color: #222;
+    }
+  </style>
 </head>
 <body>
-  <h1>Simple Calculator</h1>
-  
-  <input type="number" id="num1" placeholder="First number">
-  <input type="number" id="num2" placeholder="Second number">
-  <button onclick="calculate()">Calculate</button>
-  
-  <h2>Result: <span id="result"></span></h2>
+  <div class="calculator">
+    <h1>Simple Calculator</h1>
+    
+    <input type="number" id="num1" placeholder="First number">
+    <input type="number" id="num2" placeholder="Second number">
+    <button onclick="calculate()">Calculate</button>
+    
+    <h2>Result: <span id="result"></span></h2>
+  </div>
 
   <script>
     function calculate() {
@@ -22,6 +78,9 @@
         .then(response => response.json())
         .then(data => {
           document.getElementById("result").innerText = data.result;
+        })
+        .catch(error => {
+          document.getElementById("result").innerText = "Error";
         });
     }
   </script>
