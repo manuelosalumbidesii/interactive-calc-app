@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-@app.route("/calculate")
+@app.route("/api/calculate")
 def calculate():
     num1 = request.args.get("num1", type=int)
     num2 = request.args.get("num2", type=int)
