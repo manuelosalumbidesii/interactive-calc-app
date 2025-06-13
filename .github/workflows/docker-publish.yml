@@ -11,12 +11,24 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-
-    - name: Set image tags
+      # todo : use short commit id for tags for non-profd, semantic versioning 
+    - name: Set image tags 
       id: vars
       run: |
         TAG="v1.0.${{ github.run_number }}"
         echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+    - name: install dependencies 
+      run: |
+        echo "install dependencies"
+
+    - name: run unit test and linting or code quality
+      run: | 
+        echo "running unit test and linting using sonar"
+
+    - name: security scans 
+      run: |
+        echo "running security scan using trivy"
 
     - name: Login to Docker Hub
       uses: docker/login-action@v3
@@ -37,3 +49,32 @@ jobs:
         docker tag ${{ secrets.DOCKER_USERNAME }}/backend-calc:latest ${{ secrets.DOCKER_USERNAME }}/backend-calc:${{ steps.vars.outputs.tag }}
         docker push ${{ secrets.DOCKER_USERNAME }}/backend-calc:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/backend-calc:${{ steps.vars.outputs.tag }}
+
+     # if orchestrator is kubernetes use argo cd
+     # if ecs execute below stages
+    - name: deployment to develop environment
+      run: | 
+        echo "aws create new ecs task definition"
+        echo "aws update ecs service with task definition"
+
+    - name: run integration testing from QA
+      run: |
+        echo "integration testing webhook QA pipelines" 
+
+    - name: if QA success in develop deploy to prod
+      run: |
+        echo "success QA"
+
+    - name: deploy to prod
+      run: | 
+        echo "aws create new ecs task definition"
+        echo "aws update ecs service with task definition"
+        
+    - name: run smoke test for prod 
+      run: | 
+        echo ""
+
+    - name: sending notification to slack
+      run: | 
+        echo "sending notification to slack"
+        
