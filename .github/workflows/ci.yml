@@ -40,10 +40,13 @@ jobs:
         docker build -t backend-calc:latest ./backend
 
     - name: Run Security Scan (Trivy)
-      run: |
+    run: |
         sudo apt-get install wget -y
-        wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.50.0_Linux-64bit.deb
-        sudo dpkg -i trivy_0.50.0_Linux-64bit.deb
+        wget https://aquasecurity.github.io/trivy-repo/deb/public.key -O- | sudo apt-key add -
+        echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+        sudo apt-get update
+        sudo apt-get install trivy -y
+        trivy --version
         trivy image backend-calc:latest || true
 
     - name: Simulated Deployment (Dev)
