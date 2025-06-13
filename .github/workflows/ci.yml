@@ -1,0 +1,59 @@
+name: CI/CD Interactive Calculator
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set image tags
+      id: vars
+      run: |
+        TAG="v1.0.${{ github.run_number }}"
+        echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r backend/requirements.txt
+
+    - name: Run Unit Tests
+      run: |
+        pytest backend/tests
+
+    - name: Run Linter
+      run: |
+        flake8 backend/app.py
+
+    - name: Build Docker Images
+      run: |
+        docker build -t frontend-calc:latest ./frontend
+        docker build -t backend-calc:latest ./backend
+
+    - name: Run Security Scan (Trivy)
+      run: |
+        sudo apt-get install wget -y
+        wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.50.0_Linux-64bit.deb
+        sudo dpkg -i trivy_0.50.0_Linux-64bit.deb
+        trivy image backend-calc:latest || true
+
+    - name: Simulated Deployment (Dev)
+      run: |
+        echo "Simulated deployment to Dev environment."
+
+    - name: Simulated Smoke Test
+      run: |
+        echo "Simulated smoke test after deployment."
+
+    - name: Simulated Slack Notification
+      run: |
+        echo "Simulated sending Slack notification."
