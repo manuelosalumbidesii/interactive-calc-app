@@ -28,7 +28,7 @@ jobs:
 
     - name: Run Unit Tests
       run: |
-        pytest backend/tests
+        PYTHONPATH=backend pytest backend/tests
 
     - name: Run Linter
       run: |
